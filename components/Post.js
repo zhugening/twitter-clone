@@ -2,7 +2,7 @@ import { ChatIcon, DotsHorizontalIcon, TrashIcon, HeartIcon, ShareIcon, ChartBar
 
 export default function Post({post}) {
   return (
-    <div className="fllex p-3 cursor-pointer border-b border-gray-200">
+    <div className="flex p-3 cursor-pointer border-b border-gray-200">
         {/* image */}
         <img className = "h-11 w-11 rounded-full mr-4" src={post.userImg} alt="user-img" />
         {/* right side */}
