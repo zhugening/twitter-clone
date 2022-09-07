@@ -17,7 +17,7 @@ export default function signin({ providers }) {
                     alt="twitter logo" />
                     
                     <p className='text-center text-sm italic my-10'>This app is created for learning purpose</p>
-                    <button onClick={()=>signIn(provider.id , {callbackURL: "/"})} className='bg-red-400 rounded-lg p-3 text-white hover:bg-red-500'>Sign in with {provider.name}</button>
+                    <button onClick={()=>signIn(provider.id , {callbackURL: '/'})} className='bg-red-400 rounded-lg p-3 text-white hover:bg-red-500'>Sign in with {provider.name}</button>
                 </div>
             ))}
         </div>
