@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import Input from './Input';
 import Post from './Post';
 
+
 export default function Feed() {
     const [posts, setPosts] = useState([])
     useEffect(()=> onSnapshot(
