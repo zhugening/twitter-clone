@@ -39,7 +39,7 @@ export default function Sidebar() {
                 {/* Mini-Profile */}
             <div className="hoverEffect text-grey-700 flex items-center justify-center xl:justify-start mt-auto">
                 <img 
-                    onClick={SignOut}
+                    onClick={signOut}
                     src="https://cours-informatique-gratuit.fr/wp-content/uploads/2017/10/avatar.png" 
                     alt="user-img" 
                     className='h-20 w-20 rounded-full xl:mr-2'/>

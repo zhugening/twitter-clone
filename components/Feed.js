@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { SparklesIcon } from '@heroicons/react/solid'
-import { onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query , orderBy } from "firebase/firestore";
 import { useEffect, useState } from "react"
 import { db } from "../firebase";
 import Input from './Input';
 import Post from './Post';
 
-
 export default function Feed() {
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useState([]);
     useEffect(()=> onSnapshot(
-            query(collection(db, "posts"), orderBy("timestamp",  "desc")) ,
-                (snapshot) =>{
+        query(collection(db, "posts"), orderBy("timestamp",  "desc")),
+                (snapshot) => {
                     setPosts(snapshot.docs);
                 }
             ), []);

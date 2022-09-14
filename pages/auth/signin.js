@@ -16,14 +16,15 @@ export default function signin({ providers }) {
                     src="https://help.twitter.com/content/dam/help-twitter/brand/logo.png" 
                     alt="twitter logo" />
                     <p className='text-center text-sm italic my-10'>This app is created for learning purpose</p>
-                    <button onClick={()=>signIn(provider.id , {callbackURL: "/"})} 
-                    className='bg-red-400 rounded-lg p-3 text-black hover:bg-red-500' >Sign in with {provider.name}</button>
+                    <button 
+                    onClick={()=>signIn(provider.id, { callbackUrl: '/' })} 
+                    className='bg-red-blue rounded-lg p-3 text-black hover:bg-red-500' >Sign in with {provider.name}</button>
                 </div>
             ))}
         </div>
     </div >
   )
-}
+};
 
 export async function getServerSideProps(){
     const providers = await getProviders()

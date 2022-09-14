@@ -34,13 +34,23 @@ export default function Home({newsResults, randomUsersResults}) {
 
 //https://saurav.tech/NewsAPI/top-headlines/category/bussiness/us.json
 
-export async function getServerSideProps(){
+export async function getServerSideProps() {
   const newsResults = await fetch ("https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
   ).then((res)=> res.json());
 
   // Who to follow section "https://randomuser.me/api/?results=5000"
-  const randomUsersResults = await fetch("https://randomuser.me/api/?results=30&inc=name,login,picture").then((res)=> res.json())
-  return{
+
+  let randomUsersResults = [];
+  try {
+    const res = await fetch(
+      "https://randomuser.me/api/?results=5&inc=name,login,picture"
+    );
+
+    randomUsersResults = await res.json();
+  } catch (e) {
+    randomUsersResults = [];
+  }
+  return {
     props: {
       newsResults,
       randomUsersResults,
