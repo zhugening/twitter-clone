@@ -15,7 +15,7 @@ export default NextAuth({
     signIn: "/auth/signin"
   },
   callbacks:{
-    async session({session, token}){
+    async session({ session, token }){
         session.user.username = session.user.name
         .split(" ")
         .join("")

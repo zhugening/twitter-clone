@@ -8,6 +8,7 @@ import { XIcon } from "@heroicons/react/solid";
 
 export default function Input() {
   const {data: session} = useSession()
+  console.log(session);
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null)
   const [loading, setLoading] = useState(false);
