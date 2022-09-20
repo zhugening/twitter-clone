@@ -2,13 +2,13 @@ import { PhotographIcon, EmojiHappyIcon } from "@heroicons/react/outline"
 import React from 'react'
 import { useSession , signOut } from "next-auth/react"
 import { useState, useRef } from "react"
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { addDoc , collection , serverTimestamp } from "firebase/firestore";
 import { XIcon } from "@heroicons/react/solid";
+import { ref } from "firebase/storage";
 
 export default function Input() {
-  const {data: session} = useSession()
-  console.log(session);
+  const {data: session} = useSession();
   const [input, setInput] = useState("");
   const [selectedFile, setSelectedFile] = useState(null)
   const [loading, setLoading] = useState(false);
@@ -27,18 +27,19 @@ export default function Input() {
       username: session.user.username
     });
     const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
     if(selectedFile){
       await uploadString(imageRef, selectedFile, "data_url").then(async()=>{
         const downloadURL = await getDownloadURL(imageRef);
         await updateDoc(doc(db, "posts", docRef.id),{
           image: downloadURL,
-        })
-      })
+        });
+      });
     }
     setInput("");
     setSelectedFile(null);
     setLoading(false);
-  }
+  };
 
   const addImageToPost = (e) =>{
     const reader = new FileReader();
@@ -46,9 +47,10 @@ export default function Input() {
       reader.readAsDataURL(e.target.files[0]);
     }
     reader.onload = (readerEvent)=>{
+      // console.log(readerEvent.target.result);
       setSelectedFile(readerEvent.target.result);
-    }
-  }
+    };
+  };
 
   return (
     <>
@@ -94,7 +96,7 @@ export default function Input() {
                 onClick={sendPost}
                 disabled={!input.trim()} 
                 className="bg-blue-400 text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50" 
-                disabled>Tweet</button>
+                >Tweet</button>
                 </>
               )}
                 
