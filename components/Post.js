@@ -7,7 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import postcss from "postcss";
 import { deleteObject } from "firebase/storage";
-import { modalState } from "../atom/modalAtom";
+import { modalState , postIdState } from "../atom/modalAtom";
 import { useRecoilState } from "recoil";
 
 export default function Post({post}) {
@@ -15,6 +15,7 @@ export default function Post({post}) {
   const [likes, setLikes] = useState([]);
   const [haslikes, setHasLikes] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
 
   useEffect(() =>{
     const unsubscribe = onSnapshot(
@@ -52,7 +53,11 @@ export default function Post({post}) {
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
         {/* image */}
-        <img className = "h-11 w-11 rounded-full mr-4" src={post.userImg} alt="user-img" />
+        <img 
+          className = "h-11 w-11 rounded-full mr-4" 
+          src = {post?.data()?.userImg} 
+          alt = "user-img" />
+
         {/* right side */}
         <div className="">
         {/* Header */}
@@ -72,10 +77,22 @@ export default function Post({post}) {
         {/* post text */}
         <p className="text-gray-800 text-[15px sm:text-[16px] mb-2]">{post.data().text}</p>
         {/* post image */}
-        <img className="rounded-2xl mr-2 " src ={post.data().image} alt=""/>
+        <img className="rounded-2xl mr-2 " 
+          src ={post.data().image} 
+          alt=""/>
         {/* post icon */}
         <div className="flex justify-between text-gray-500 p-2">
-            <ChatIcon onClick={()=> setOpen(!open)} className="h- w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            <ChatIcon 
+            onClick={()=> {
+              if(!session){
+                signIn();
+              } else {
+                setPostId(post.id)
+                setOpen(!open) 
+              }              
+            }} 
+            className="h- w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+
             {session?.user.uid === post?.data().id && (
               <TrashIcon onClick={deletePost} className="h- w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"/>
             )}

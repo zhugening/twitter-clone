@@ -24,7 +24,7 @@ export default function Home({newsResults, randomUsersResults}) {
       <Widgets newsResults = {newsResults.articles} randomUsersResults = {randomUsersResults.results}/>
 
       {/* Modal */}
-      <CommentModal />
+      <CommentModal/>
 
       </main>
 
