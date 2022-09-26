@@ -5,7 +5,7 @@ import { onSnapshot , doc, setDoc , collection, deleteDoc } from "firebase/fires
 import { db, storage } from "../firebase"
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import postcss from "postcss";
+import postcss, { comment } from "postcss";
 import { deleteObject } from "firebase/storage";
 import { modalState , postIdState } from "../atom/modalAtom";
 import { useRecoilState } from "recoil";
@@ -13,6 +13,7 @@ import { useRecoilState } from "recoil";
 export default function Post({post}) {
   const { data: session} = useSession();
   const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [haslikes, setHasLikes] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
@@ -23,6 +24,15 @@ export default function Post({post}) {
       (snapshot)=> setLikes(snapshot.docs)
     );
   }, [db]);
+
+
+  useEffect(() =>{
+    const unsubscribe = onSnapshot(
+      collection(db, "posts", post.id, "comments"),
+      (snapshot)=> setComments(snapshot.docs)
+    );
+  }, [db]);
+
 
   useEffect(()=>{
     setHasLikes(likes.findIndex((like)=>like.id === session?.user.uid) !== -1); 
@@ -59,7 +69,8 @@ export default function Post({post}) {
           alt = "user-img" />
 
         {/* right side */}
-        <div className="">
+        <div className="flex-1">
+
         {/* Header */}
         <div className="flex items-center justify-between">
             {/* post user info */}
@@ -80,8 +91,10 @@ export default function Post({post}) {
         <img className="rounded-2xl mr-2 " 
           src ={post.data().image} 
           alt=""/>
+
         {/* post icon */}
         <div className="flex justify-between text-gray-500 p-2">
+          <div className="flex items-center select-none">
             <ChatIcon 
             onClick={()=> {
               if(!session){
@@ -91,21 +104,25 @@ export default function Post({post}) {
                 setOpen(!open) 
               }              
             }} 
-            className="h- w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            {comments.length > 0 && (
+              <span className="text-sm">{comments.length}</span>
+            )}
+            </div>
 
             {session?.user.uid === post?.data().id && (
-              <TrashIcon onClick={deletePost} className="h- w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"/>
+              <TrashIcon onClick={deletePost} className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"/>
             )}
             
             <div className="flex items-center">
             {haslikes? (
               <HeartIconFilled 
               onClick={likePost} 
-              className="h- w-9 hoverEffect p-2 text-red-600 hover:bg-red-100"/>
+              className="h-9 w-9 hoverEffect p-2 text-red-600 hover:bg-red-100"/>
             ) : (
               <HeartIcon 
               onClick={likePost} 
-              className="h- w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"/>
+              className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"/>
             )}
             {
               likes.length > 0 && (
@@ -116,8 +133,8 @@ export default function Post({post}) {
             
             
             
-            <ShareIcon className="h- w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
-            <ChartBarIcon className="h- w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            <ShareIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            <ChartBarIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
         </div>
         </div>
     </div>

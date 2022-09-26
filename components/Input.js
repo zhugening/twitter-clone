@@ -3,9 +3,9 @@ import React from 'react'
 import { useSession , signOut } from "next-auth/react"
 import { useState, useRef } from "react"
 import { db, storage } from "../firebase";
-import { addDoc , collection , serverTimestamp } from "firebase/firestore";
+import { addDoc , collection , serverTimestamp , doc , updateDoc } from "firebase/firestore";
 import { XIcon } from "@heroicons/react/solid";
-import { ref } from "firebase/storage";
+import { getDownloadURL, ref , uploadString } from "firebase/storage";
 
 export default function Input() {
   const {data: session} = useSession();
@@ -26,10 +26,11 @@ export default function Input() {
       name: session.user.name,
       username: session.user.username
     });
-    const imageRef = ref(storage, `posts/${docRef.id}/image`)
 
-    if(selectedFile){
-      await uploadString(imageRef, selectedFile, "data_url").then(async()=>{
+    const imageRef = ref(storage, `posts/${docRef.id}/image`);
+
+    if (selectedFile){
+      await uploadString(imageRef , selectedFile , "data_url").then(async()=>{
         const downloadURL = await getDownloadURL(imageRef);
         await updateDoc(doc(db, "posts", docRef.id),{
           image: downloadURL,
@@ -84,7 +85,8 @@ export default function Input() {
                 <>
                   <div className='flex'>
                   <div className="" onClick={() =>filePickerRef.current.click()}>
-                    <PhotographIcon className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100"/>
+                    <PhotographIcon 
+                    className="h-10 w-10 hoverEffect p-2 text-sky-500 hover:bg-sky-100"/>
                     <input 
                     type="file" 
                     hidden ref={filePickerRef} 
