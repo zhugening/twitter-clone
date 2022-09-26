@@ -5,7 +5,6 @@ import { onSnapshot , doc, setDoc , collection, deleteDoc } from "firebase/fires
 import { db, storage } from "../firebase"
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { deleteObject } from "firebase/storage";
 import { modalState , postIdState } from "../atom/modalAtom";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/router"
